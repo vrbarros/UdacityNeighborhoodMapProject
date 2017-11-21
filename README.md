@@ -8,6 +8,7 @@ To bootstrap fast this project, I used Bootstrap 4 and [Light Bootstrap Dashboar
 
 - Download or clone the Git repository
 - Open index.html in your browser
+- Try to find some location, for example: Starbucks
 
 # License
 
