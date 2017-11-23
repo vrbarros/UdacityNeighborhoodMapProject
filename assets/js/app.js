@@ -8,7 +8,7 @@ var AppViewModel = {
   // Search console controls after changes in search input
   searchConsole: function() {
     // Set the state to show or hide
-    if (this.search() == '') {
+    if (this.search() === '') {
       // Hide the clear button
       this.shouldClear(false);
     } else {
@@ -22,8 +22,6 @@ var AppViewModel = {
     this.search('');
     // Hide the clear button again
     this.searchConsole();
-    // Clear wikipedia
-    clearWikipedia();
     // Remove all markers from the map
     neighborhoodmap.removeMarkers(markers);
   }
