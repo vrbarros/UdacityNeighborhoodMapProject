@@ -3,7 +3,7 @@ var markers = [];
 
 neighborhoodmap = {
   // Initial function from Google Maps javascript API
-  initGoogleMaps: function() {
+  initGoogleMaps: function () {
     // Set the Latitude and Longitude if the current user location is not available
     var defaultLocation = new google.maps.LatLng(40.748817, -73.985428);
 
@@ -30,7 +30,7 @@ neighborhoodmap = {
     // Check if browser and user has geolocation enabled
     if (navigator.geolocation) {
       // Get user current location
-      navigator.geolocation.getCurrentPosition(function(position) {
+      navigator.geolocation.getCurrentPosition(function (position) {
         var pos = {
           lat: position.coords.latitude,
           lng: position.coords.longitude
@@ -46,18 +46,20 @@ neighborhoodmap = {
       });
     };
 
+
+
     // Create the search box and link it to the UI element.
     var input = document.getElementById('search-text');
     var searchBox = new google.maps.places.SearchBox(input);
 
     // Bias the SearchBox results towards current map's viewport.
-    map.addListener('bounds_changed', function() {
+    map.addListener('bounds_changed', function () {
       searchBox.setBounds(map.getBounds());
     });
 
     // Listen for the event fired when the user selects a prediction and retrieve
     // more details for that place.
-    searchBox.addListener('places_changed', function() {
+    searchBox.addListener('places_changed', function () {
       var places = searchBox.getPlaces();
 
       if (places.length == 0) {
@@ -69,7 +71,7 @@ neighborhoodmap = {
 
       // For each place, get the icon, name and location.
       var bounds = new google.maps.LatLngBounds();
-      places.forEach(function(place) {
+      places.forEach(function (place) {
         if (!place.geometry) {
           console.log("Returned place contains no geometry");
           return;
@@ -97,7 +99,7 @@ neighborhoodmap = {
 
 
         // Add click listener to marker to open info InfoWindow
-        marker.addListener('click', function() {
+        marker.addListener('click', function () {
 
           // Set the request with place id information
           var request = {
@@ -110,7 +112,7 @@ neighborhoodmap = {
           // Animation when clicked function
           marker.setAnimation(google.maps.Animation.BOUNCE);
           // Set timeout to stop animation
-          setTimeout(function() {
+          setTimeout(function () {
             marker.setAnimation(null);;
           }, 2000);
 
@@ -161,7 +163,7 @@ neighborhoodmap = {
       map.fitBounds(bounds);
     });
   },
-  removeMarkers: function(markers) {
+  removeMarkers: function (markers) {
     // This function will loop through the listings and hide them all.
     for (var i = 0; i < markers.length; i++) {
       markers[i].setMap(null);
