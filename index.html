@@ -47,9 +47,37 @@
 							</a>
 						</li>
 						<li>
+							<p>Search</p>
+						</li>
+						<li>
+							<div class="input-group">
+								<input
+									type="text"
+									class="form-control"
+									size="100"
+									placeholder="Search for places in my neighborhood..."
+									id="search-text"
+									data-bind="textInput: search, event: { keyup: searchConsole }">
+							</div>
+						</li>
+						<li>
+							<p>Filter</p>
+						</li>
+						<li>
+							<div class="input-group">
+								<input
+									type="text"
+									class="form-control"
+									size="100"
+									placeholder="For location..."
+									id="filter-text"
+									data-bind="textInput: filter, event: { keyup: filterConsole }"/>
+							</div>
+						</li>
+						<li>
 							<p>Favorite</p>
 						</li>
-						<div data-bind="foreach: locations">
+						<div data-bind="foreach: filtered">
 							<li>
 								<a href="#" data-bind="click: $parent.selectLocation.bind($data)">
 									<p data-bind="text: title">Loading...</p>
@@ -69,19 +97,12 @@
 			<div class="main-panel">
 				<nav class="navbar navbar-default navbar-fixed">
 					<div class="container-fluid">
-						<div class="navbar-header">
-							<div class="navbar-form navbar-left">
-								<div class="input-group">
-									<input
-										type="text"
-										class="form-control"
-										size="100"
-										placeholder="Search for places in my neighborhood..."
-										id="search-text"
-										data-bind="textInput: search, event: { keyup: searchConsole }">
-								</div>
-							</div>
-						</div>
+						<button type="button" class="navbar-toggle" data-toggle="collapse">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
 					</div>
 				</nav>
 				<div id="map"></div>
@@ -112,6 +133,8 @@
 	<script>
 		$().ready(function () {
 			neighborhoodmap.initGoogleMaps();
+			AppViewModel.resetConsole();
+			AppViewModel.loadMarkers(AppViewModel.locations());
 		});
 	</script>
 </html>
