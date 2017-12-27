@@ -212,11 +212,44 @@ neighborhoodmap = {
       .Marker( { map: map, title: data.title, animation: google.maps.Animation.DROP, position: data.location, } );
     // Add infoWindow to the marker
     marker.addListener( 'click', function () {
-      // Update the content into the info window
-      infoWindow.setContent( data.title );
-      // Open the info window with the content
-      infoWindow.open( map, marker );
+      // Fourquare API call using ajax
+      $.ajax( {
+        type: "GET", dataType: "jsonp", cache: false,
+        // Use of Foursquare explore function userless authentication
+        url: 'https://api.foursquare.com/v2/venues/explore?ll=' + data.location.lat + ',' + data.location.lng + '&limit=5&client_id=X2BQTIG4ZLKIHR5MNLMGYTYQQKNPPFOZ4M3VKZMFOG3BM0FK&client_secret=PRMMJ4ODYXHVLDJ2V0INOE5SM51F0XBPN3BHR04M5XF1JNFE&v=20171227',
+        success: function ( result ) {
+          // Get all 5 results
+          var base = result
+            .response
+            .groups[ 0 ]
+            .items;
+
+          // Create content variable to fill about the place
+          var content = `<strong>${ data.title }</strong><br /><br /> Recommended near places (by Foursquare): <br />`;
+
+          // Loop each result and add to content
+          $.each( base, function ( index ) {
+
+            var url = base[ index ].venue.url;
+            var name = base[ index ].venue.name;
+
+            content += `<strong>${ name}</strong> <a href="${ url }" target="_blank">view more</a> <br />
+                            `;
+          } );
+
+          // Update the content into the info window
+          infoWindow.setContent( content );
+          // Open the info window with the content
+          infoWindow.open( map, marker );
+        },
+        error: function ( jqXHR, status, err ) {
+          // Show error message
+          alert( "Status: " + status );
+          alert( "Error: " + err );
+        }
+      } );
     } );
+
     // Add the marker to the array
     markers.push( marker );
     // Change map position
@@ -230,7 +263,7 @@ neighborhoodmap = {
     // Iterate all Locations
     data.forEach( function ( location ) {
       // Create each mark re-using the function create marker
-      neighborhoodmap.createMarker(location);
+      neighborhoodmap.createMarker( location );
       // Extend bounds
       bounds.extend( location.location );
     } );
