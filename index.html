@@ -123,7 +123,7 @@
 	<!-- Google Maps Plugin -->
 	<script
 		type="text/javascript"
-		src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBd3n4_Gu9itUdXG7s67DtSWfkTeK2HnYI"></script>
+		src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBd3n4_Gu9itUdXG7s67DtSWfkTeK2HnYI&callback=init" async defer></script>
 	<!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
 	<script src="assets/js/light-bootstrap-dashboard.js?v=1.4.0"></script>
 	<!-- Google Maps Javascript API customized for this project -->
@@ -131,8 +131,12 @@
 	<!-- This application file using Knockout framework -->
 	<script src="assets/js/app.js"></script>
 	<script>
-		$().ready(function () {
+		// Callback function to init map
+		function init() {
 			neighborhoodmap.initGoogleMaps();
+		};
+
+		$().ready(function () {
 			AppViewModel.resetConsole();
 			AppViewModel.loadMarkers(AppViewModel.locations());
 		});
