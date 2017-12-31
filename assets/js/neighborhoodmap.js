@@ -17,7 +17,7 @@ neighborhoodmap = {
       zoomControl: true,
       scaleControl: true,
       streetViewControl: true,
-      styles: []
+      styles: [],
     }
 
     // Create map object
@@ -43,7 +43,7 @@ neighborhoodmap = {
         .getCurrentPosition( function ( position ) {
           var pos = {
             lat: position.coords.latitude,
-            lng: position.coords.longitude
+            lng: position.coords.longitude,
           };
           // Open the infoWindow at the map
           currentLocation.open( map );
@@ -103,7 +103,7 @@ neighborhoodmap = {
             .Point( 17, 34 ),
           scaledSize: new google
             .maps
-            .Size( 25, 25 )
+            .Size( 25, 25 ),
         };
 
         // Create a marker for each place
@@ -115,7 +115,7 @@ neighborhoodmap = {
             title: place.name,
             id: place.place_id,
             animation: google.maps.Animation.DROP,
-            position: place.geometry.location
+            position: place.geometry.location,
           } );
 
         // Update info window content
@@ -165,11 +165,11 @@ neighborhoodmap = {
                         <div style="margin-left:220px; margin-bottom:20px;">
                           <h2>${ name }</h2><p></p>`
               // Check if some variables exists
-              if ( address )
+              if ( address ) 
                 content += `<p><b>Address:</b> ${ address }</p>`
-              if ( phone )
+              if ( phone ) 
                 content += `<p><b>Phone:</b> ${ phone }</p>`
-              if ( website )
+              if ( website ) 
                 content += `<p><b>Website:</b> <a target="_blank" href="${ website }">Click here</a></p>`
                 // Closing the content
               content += `</div>`;
@@ -205,55 +205,61 @@ neighborhoodmap = {
     // Clear the array from markers
     markers = [];
   },
-  createMarker: function ( data ) {
+  createMarker: function ( data, filtered ) {
     // This function create a market at the maps
     var marker = new google
       .maps
-      .Marker( { map: map, title: data.title, animation: google.maps.Animation.DROP, position: data.location, } );
+      .Marker( { map: map, title: data.title, animation: google.maps.Animation.DROP, position: data.location } );
     // Add infoWindow to the marker
     marker.addListener( 'click', function () {
-      // Fourquare API call using ajax
-      $.ajax( {
-        type: "GET", dataType: "jsonp", cache: false,
-        // Use of Foursquare explore function userless authentication
-        url: 'https://api.foursquare.com/v2/venues/explore?ll=' + data.location.lat + ',' + data.location.lng + '&limit=5&client_id=X2BQTIG4ZLKIHR5MNLMGYTYQQKNPPFOZ4M3VKZMFOG3BM0FK&client_secret=PRMMJ4ODYXHVLDJ2V0INOE5SM51F0XBPN3BHR04M5XF1JNFE&v=20171227',
-        success: function ( result ) {
-          // Get all 5 results
-          var base = result
-            .response
-            .groups[ 0 ]
-            .items;
-
-          // Create content variable to fill about the place
-          var content = `<strong>${ data.title }</strong><br /><br /> Recommended near places (by Foursquare): <br />`;
-
-          // Loop each result and add to content
-          $.each( base, function ( index ) {
-
-            var url = base[ index ].venue.url;
-            var name = base[ index ].venue.name;
-
-            content += `<strong>${ name}</strong> <a href="${ url }" target="_blank">view more</a> <br />
-                            `;
-          } );
-
-          // Update the content into the info window
-          infoWindow.setContent( content );
-          // Open the info window with the content
-          infoWindow.open( map, marker );
-        },
-        error: function ( jqXHR, status, err ) {
-          // Show error message
-          alert( "Status: " + status );
-          alert( "Error: " + err );
-        }
-      } );
+      neighborhoodmap.info( data, marker, map );
     } );
-
+    // Check if it is a filtered result
+    if ( filtered === true ) {
+      // Show info window
+      neighborhoodmap.info( data, marker, map );
+    }
     // Add the marker to the array
     markers.push( marker );
     // Change map position
     map.setCenter( data.location );
+  },
+  info: function ( data, marker, map ) {
+    // Fourquare API call using ajax
+    $.ajax( {
+      type: "GET", dataType: "jsonp", cache: false,
+      // Use of Foursquare explore function userless authentication
+      url: 'https://api.foursquare.com/v2/venues/explore?ll=' + data.location.lat + ',' + data.location.lng + '&limit=5&client_id=X2BQTIG4ZLKIHR5MNLMGYTYQQKNPPFOZ4M3VKZMFOG3BM0FK&client_secret=PRMMJ4ODYXHVLDJ2V0INOE5SM51F0XBPN3BHR04M5XF1JNFE&v=20171227',
+      success: function ( result ) {
+        // Get all 5 results
+        var base = result
+          .response
+          .groups[ 0 ]
+          .items;
+
+        // Create content variable to fill about the place
+        var content = `<strong>${ data.title }</strong><br /><br /> Recommended near places (by Foursquare): <br />`;
+
+        // Loop each result and add to content
+        $.each( base, function ( index ) {
+
+          var url = base[ index ].venue.url;
+          var name = base[ index ].venue.name;
+
+          content += `<strong>${ name}</strong> <a href="${ url }" target="_blank">view more</a> <br />
+                          `;
+        } );
+
+        // Update the content into the info window
+        infoWindow.setContent( content );
+        // Open the info window with the content
+        infoWindow.open( map, marker );
+      },
+      error: function ( jqXHR, status, err ) {
+        // Show error message
+        alert( "There was an error using Foursquare API. Please try again soon." );
+      },
+    } );
   },
   loadMarkers: function ( data ) {
     // Set the bounds
@@ -270,5 +276,9 @@ neighborhoodmap = {
 
     // Adjust the viewport
     map.fitBounds( bounds );
-  }
+  },
+  mapsError: function () {
+    // Show error message
+    alert( "There was an error loading Google Maps. Please try again." );
+  },
 }
