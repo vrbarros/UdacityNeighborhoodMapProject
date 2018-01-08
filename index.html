@@ -136,6 +136,11 @@
 			neighborhoodmap.initGoogleMaps();
 		};
 
+		function mapsError() {
+		  // Show error message
+		  alert( "There was an error loading Google Maps. Please try again." );
+		};
+
 		$().ready(function () {
 			AppViewModel.resetConsole();
 			AppViewModel.loadMarkers(AppViewModel.locations());

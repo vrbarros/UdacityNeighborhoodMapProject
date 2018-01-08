@@ -165,11 +165,11 @@ neighborhoodmap = {
                         <div style="margin-left:220px; margin-bottom:20px;">
                           <h2>${ name }</h2><p></p>`
               // Check if some variables exists
-              if ( address ) 
+              if ( address )
                 content += `<p><b>Address:</b> ${ address }</p>`
-              if ( phone ) 
+              if ( phone )
                 content += `<p><b>Phone:</b> ${ phone }</p>`
-              if ( website ) 
+              if ( website )
                 content += `<p><b>Website:</b> <a target="_blank" href="${ website }">Click here</a></p>`
                 // Closing the content
               content += `</div>`;
@@ -276,9 +276,5 @@ neighborhoodmap = {
 
     // Adjust the viewport
     map.fitBounds( bounds );
-  },
-  mapsError: function () {
-    // Show error message
-    alert( "There was an error loading Google Maps. Please try again." );
   },
 }
